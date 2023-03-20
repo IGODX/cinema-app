@@ -1,2 +1,2 @@
-### App that just show/search films from TheMovieDbAPI.
+### App that just show/search parsed films from TheMovieDbAPI.
 
