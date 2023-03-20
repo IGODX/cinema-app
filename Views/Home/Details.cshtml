@@ -1,0 +1,53 @@
+﻿@model DetailsViewModel
+@{
+    const string IMGPATH = @"https://image.tmdb.org/t/p/w1280";
+    string? directorName = Model.Credits?.Crew?.FirstOrDefault(e => e.Job == "Director")?.Name;
+    string? scriptorName = Model.Credits?.Crew?.FirstOrDefault(e => e.Job == "Screenplay" || e.Job == "Writer")?.Name;
+    if (directorName == null)
+        directorName = "Not selected!";
+    if (scriptorName == null)
+        scriptorName = "Not selected!";
+}
+
+<div class="details">
+    <img class="details-img" src="@(IMGPATH + Model.Details.PosterPath)" alt="@Model.Details.Title">
+    <div class="details-info">
+        <h1>@Model.Details.Title</h1>
+        <ul>
+            <li>
+                <p class="key">Age:</p>
+                <p class="value">@(Model.Details.Adult == true ? "18+" : "12+")</p>
+            </li>
+             <li>
+                <p class="key">Year:</p>
+                <p class="value">@Model.Details.ReleaseDate.Substring(0,4)</p>
+            </li>
+            <li>
+                <p class="key">Original title:</p>
+                <p class="value">@Model.Details.OriginalTitle</p>   
+            </li>
+            <li>
+                <p class="key">Director:</p>
+                <p class="value">@directorName</p>
+            </li>
+            <li>
+                <p class="key">Spoken languages:</p>
+                <p class="value">@(Model.Details.SpokenLanguages != null ? string.Join(", ", Model.Details.SpokenLanguages.Select(e => e.EnglishName)) : "Not selected!")</p>
+            </li>
+            <li>
+                <p class="key">Script:</p>
+                <p class="value">@scriptorName</p>
+            </li>
+            <li>
+                <p class="key">Cast:</p>
+                <p class="value">
+                    @(Model.Credits?.Cast != null ? string.Join(", ", Model.Credits.Cast.Take(10).Select(e => e.OriginalName)) : "Not selected!")
+                </p>
+            </li>
+             <li>
+                <p class="key">Overview:</p>
+                <p class="value">@Model.Details.Overview</p>
+            </li>
+        </ul> 
+    </div>
+</div>

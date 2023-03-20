@@ -1,0 +1,72 @@
+﻿@model IndexViewModel
+
+@{
+    const string NOIMG = @"https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png";
+    const string IMGPATH = @"https://image.tmdb.org/t/p/w1280";
+    const int MAX_PAGINATION_N = 5;
+    int pages = Model.Popular.TotalPages >= Model.Popular.Page + MAX_PAGINATION_N ? Model.Popular.Page + MAX_PAGINATION_N : Model.Popular.TotalPages;
+}
+
+<header>
+    <nav>
+        <div class="main-page-wrapper">
+            <a asp-action="Index">
+                <h2>MyFavouriteMovies</h2>
+            </a>
+        </div>
+        <div class="search-wrapper">
+            <form id="form" class="form">
+                <input class="search" type="text" placeholder="Search" id="search" asp-for="Search">
+            </form>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="movies-wrapper">
+    @foreach (var film in Model.Popular.Results)
+    {
+    <div class="movie">
+        <a asp-action="Details" asp-route-id="@film.Id">
+                    <div class="movie-img">
+                        <img src="@(film.PosterPath != null ? IMGPATH + film.PosterPath : NOIMG)"
+                         alt="@film.Title" />
+                    </div>
+       
+        <div class="movie-info">
+            <h3 class="movie-title">@film.Title</h3>
+             <span>@Math.Round(film.VoteAverage, 1)</span>
+        </div>
+        </a>
+     </div>
+}
+    </div>
+
+    <ul class="pagination">
+    
+            @if(Model.Popular.Page > 1)
+            {
+              <li><a asp-action="Index" asp-route-search="@Model.Search" asp-route-page="@(Model.Popular.Page - 1)">Previous</a></li>
+            }
+            else {
+              <li><span>Previous</span></li>
+            }
+        @if (Model.Popular.TotalPages > Model.Popular.Page)
+        {
+            <li><a asp-action="Index" asp-route-search="@Model.Search" asp-route-page="@(Model.Popular.Page + 1)">Next</a></li>
+        }
+        else{
+            <li><span>Next</span></li>
+        }
+        @if (Model.Popular.Page >= 6)
+        {
+            <li><a asp-action="Index" asp-route-search="@Model.Search" asp-route-page="1">1</a></li>
+        }
+        <li><span class="active">@Model.Popular.Page</span></li>
+            @for (int i = Model.Popular.Page + 1; i <= pages; i++)
+            {
+                <li><a asp-action="Index" asp-route-search="@Model.Search" asp-route-page="@i">@i</a></li>
+            }  
+    </ul>
+</main>
+
+
